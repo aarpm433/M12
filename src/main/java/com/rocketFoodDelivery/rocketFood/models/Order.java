@@ -43,7 +43,7 @@ public class Order {
     @JoinColumn(name = "courier_id")
     private Courier courier;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Min(1)
     @Max(5)
     private int restaurant_rating;
