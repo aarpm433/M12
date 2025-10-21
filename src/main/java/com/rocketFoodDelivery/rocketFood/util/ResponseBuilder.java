@@ -10,19 +10,20 @@ import org.springframework.http.HttpStatus;
  * are managed by the {@link com.rocketFoodDelivery.rocketFood.controller.GlobalExceptionHandler} class
  */
 
-public class ResponseBuilder {
+    public class ResponseBuilder {
 
-    public static ResponseEntity<Object> buildOkResponse(Object data) {
+        public static ResponseEntity<Object> buildOkResponse(String message, Object data) {
         ApiResponseDTO response = new ApiResponseDTO();
-        response.setMessage("Success");
+        response.setMessage(message);
         response.setData(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> buildCreatedResponse(Object data) {
+    public static ResponseEntity<Object> buildCreatedResponse(String message, Object data) {
         ApiResponseDTO response = new ApiResponseDTO();
-        response.setMessage("Success");
+        response.setMessage(message);
         response.setData(data);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 }
