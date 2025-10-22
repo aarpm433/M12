@@ -51,4 +51,20 @@ public class ProductOrder {
         }
         return true;
     }
+    public Integer getQuantity() {
+    return product_quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.product_quantity = quantity;
+    }
+
+    public Integer getUnitCost() {
+        return product_unit_cost;
+    }
+
+    public void setUnitCost(Integer unitCost) {
+        this.product_unit_cost = unitCost;
+    }
+
 }

@@ -46,7 +46,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<Object[]> findRestaurantsByRatingAndPriceRange(@Param("rating") Integer rating,
                                                         @Param("priceRange") Integer priceRange);
 
-    // ✅ Insert new restaurant
+    //  Insert new restaurant
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = """
@@ -60,7 +60,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
                         @Param("phone") String phone,
                         @Param("email") String email);
 
-    // ✅ Update existing restaurant info
+    //  Update existing restaurant info
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = """
@@ -73,17 +73,17 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
                           @Param("priceRange") int priceRange,
                           @Param("phone") String phone);
 
-    // ✅ Find restaurant by ID
+    //  Find restaurant by ID
     @Query(nativeQuery = true, value = """
         SELECT * FROM restaurants WHERE id = :restaurantId
         """)
     Optional<Restaurant> findRestaurantById(@Param("restaurantId") int restaurantId);
 
-    // ✅ Get last inserted ID (MySQL only)
+    //  Get last inserted ID (MySQL only)
     @Query(nativeQuery = true, value = "SELECT LAST_INSERT_ID() AS id")
     int getLastInsertedId();
 
-    // ✅ Delete restaurant by ID
+    //  Delete restaurant by ID
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = """

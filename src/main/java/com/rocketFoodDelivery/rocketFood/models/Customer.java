@@ -37,4 +37,9 @@ public class Customer {
     @Email
     @Column(nullable = false)
     private String email;
+
+    public String getFullName() {
+    return userEntity != null ? userEntity.getName() : "";
+    }
+
 }
