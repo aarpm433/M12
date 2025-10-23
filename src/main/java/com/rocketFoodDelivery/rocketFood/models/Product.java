@@ -33,4 +33,12 @@ public class Product {
     @Column(nullable = false)
     @Min(0)
     private Integer cost;
+
+    public Integer getPrice() {
+    return this.cost;
+    }
+
+
+    
+
 }

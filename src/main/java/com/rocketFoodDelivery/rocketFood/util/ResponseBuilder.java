@@ -2,27 +2,51 @@ package com.rocketFoodDelivery.rocketFood.util;
 
 import org.springframework.http.ResponseEntity;
 import com.rocketFoodDelivery.rocketFood.dtos.ApiResponseDTO;
-
 import org.springframework.http.HttpStatus;
+import java.util.Map;
 
 /**
- * Custom utility class for handling API responses. Only manages success responses. Error responses
- * are managed by the {@link com.rocketFoodDelivery.rocketFood.controller.GlobalExceptionHandler} class
+ * Utility class for handling API responses.
+ * Success responses -> ApiResponseDTO
+ * Error responses -> Map<String, Object>
  */
-
 public class ResponseBuilder {
 
-    public static ResponseEntity<Object> buildOkResponse(Object data) {
+    // --- SUCCESS RESPONSES ---
+
+    public static ResponseEntity<Object> buildOkResponse(String message, Object data) {
         ApiResponseDTO response = new ApiResponseDTO();
-        response.setMessage("Success");
+        response.setMessage(message);
         response.setData(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> buildCreatedResponse(Object data) {
+    public static ResponseEntity<Object> buildCreatedResponse(String message, Object data) {
         ApiResponseDTO response = new ApiResponseDTO();
-        response.setMessage("Success");
+        response.setMessage(message);
         response.setData(data);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // --- ERROR RESPONSES ---
+
+    public static ResponseEntity<Object> buildBadRequest(String error, String details) {
+        return new ResponseEntity<>(
+            Map.of(
+                "error", error,
+                "details", details
+            ),
+            HttpStatus.BAD_REQUEST
+        );
+    }
+
+    public static ResponseEntity<Object> buildNotFound(String details) {
+        return new ResponseEntity<>(
+            Map.of(
+                "error", "Resource not found",
+                "details", details
+            ),
+            HttpStatus.NOT_FOUND
+        );
     }
 }

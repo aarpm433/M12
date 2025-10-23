@@ -1,6 +1,5 @@
 package com.rocketFoodDelivery.rocketFood.repository;
 
-import com.rocketFoodDelivery.rocketFood.models.Order;
 import com.rocketFoodDelivery.rocketFood.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,16 +14,16 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findById(int id);
-    List <Product> findAll();
+    List<Product> findAll();
     List<Product> findByRestaurantId(int restaurantId);
 
-    // TODO
-    @Query(nativeQuery = true, value = "TODO Write SQL query here")
+    // Get all products belonging to a specific restaurant
+    @Query(nativeQuery = true, value = "SELECT * FROM products WHERE restaurant_id = :restaurantId")
     List<Product> findProductsByRestaurantId(@Param("restaurantId") int restaurantId);
 
-    // TODO
+    // Delete all products belonging to a specific restaurant
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "TODO Write SQL query here")
+    @Query(nativeQuery = true, value = "DELETE FROM products WHERE restaurant_id = :restaurantId")
     void deleteProductsByRestaurantId(@Param("restaurantId") int restaurantId);
 }

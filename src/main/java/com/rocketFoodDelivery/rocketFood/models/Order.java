@@ -18,13 +18,12 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "restaurant_id" , nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
@@ -34,9 +33,8 @@ public class Order {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
-
     @JoinColumn(name = "status_id", nullable = false)
-    private OrderStatus order_status ;
+    private OrderStatus order_status;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -47,4 +45,24 @@ public class Order {
     @Min(1)
     @Max(5)
     private int restaurant_rating;
+
+    // ============================
+    // Helper getters for DTOs/Controllers
+    // ============================
+
+    public Integer getCustomerId() {
+        return customer != null ? customer.getId() : null;
+    }
+
+    public Integer getRestaurantId() {
+        return restaurant != null ? restaurant.getId() : null;
+    }
+
+    public Integer getCourierId() {
+        return courier != null ? courier.getId() : null;
+    }
+
+    public String getStatus() {
+        return order_status != null ? order_status.getName() : null;
+    }
 }
