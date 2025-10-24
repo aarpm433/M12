@@ -13,11 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+
     Optional<Product> findById(int id);
+
     List<Product> findAll();
+
     List<Product> findByRestaurantId(int restaurantId);
 
-    // Get all products belonging to a specific restaurant
+    // Get all products belonging to a specific restaurant (native query version)
     @Query(nativeQuery = true, value = "SELECT * FROM products WHERE restaurant_id = :restaurantId")
     List<Product> findProductsByRestaurantId(@Param("restaurantId") int restaurantId);
 

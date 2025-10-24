@@ -3,11 +3,7 @@ package com.rocketFoodDelivery.rocketFood.controller.api;
 import com.rocketFoodDelivery.rocketFood.dtos.AuthRequestDTO;
 import com.rocketFoodDelivery.rocketFood.dtos.AuthResponseErrorDTO;
 import com.rocketFoodDelivery.rocketFood.dtos.AuthResponseSuccessDTO;
-import com.rocketFoodDelivery.rocketFood.models.Courier;
-import com.rocketFoodDelivery.rocketFood.models.Customer;
 import com.rocketFoodDelivery.rocketFood.models.UserEntity;
-import com.rocketFoodDelivery.rocketFood.repository.CourierRepository;
-import com.rocketFoodDelivery.rocketFood.repository.CustomerRepository;
 import com.rocketFoodDelivery.rocketFood.security.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,45 +17,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
-
 @RestController
 public class AuthController {
-    private CourierRepository courierRepository;
-    private CustomerRepository customerRepository;
+
     @Autowired
-    AuthenticationManager authManager;
+    private AuthenticationManager authManager;
+
     @Autowired
-    JwtUtil jwtUtil;
-    public AuthController(CourierRepository courierRepository,CustomerRepository customerRepository){
-        this.courierRepository = courierRepository;
-        this.customerRepository = customerRepository;
-    }
+    private JwtUtil jwtUtil;
+
     @PostMapping("/api/auth")
-    public ResponseEntity<?> authenticate(@RequestBody @Valid AuthRequestDTO request){
+    public ResponseEntity<?> authenticate(@RequestBody @Valid AuthRequestDTO request) {
         try {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(), request.getPassword())
             );
+
             UserEntity user = (UserEntity) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(user);
-            Optional<Courier> courier = courierRepository.findByUserEntityId(user.getId());
-            Optional<Customer> customer = customerRepository.findByUserEntityId(user.getId());
 
+            // ✅ Match the spec: only return success + accessToken
             AuthResponseSuccessDTO response = new AuthResponseSuccessDTO();
-            if(courier.isPresent()){
-                response.setCourier_id(courier.get().getId());
-            }
-            if (customer.isPresent()){
-                response.setCustomer_id(customer.get().getId());
-            }
             response.setSuccess(true);
             response.setAccessToken(accessToken);
-            response.setUser_id(user.getId());
-            return ResponseEntity.ok().body(response);
+
+            return ResponseEntity.ok(response);
+
         } catch (BadCredentialsException e) {
+            // ✅ Match the spec: only return { "success": false }
             AuthResponseErrorDTO response = new AuthResponseErrorDTO();
             response.setSuccess(false);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
