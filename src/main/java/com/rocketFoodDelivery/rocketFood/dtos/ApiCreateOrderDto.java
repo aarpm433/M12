@@ -17,9 +17,6 @@ public class ApiCreateOrderDto {
     private Integer courierId; // optional
 
     @NotNull
-    private Integer statusId;
-
-    @NotNull
     private List<ProductOrderDto> products; // list of products
 
     @Getter
@@ -30,5 +27,14 @@ public class ApiCreateOrderDto {
 
         @NotNull
         private Integer quantity;
+
+        public ProductOrderDto() {} // default
+
+        public ProductOrderDto(Integer id, Integer quantity) {
+            this.id = id;
+            this.quantity = quantity;
+        }
     }
+
 }
+

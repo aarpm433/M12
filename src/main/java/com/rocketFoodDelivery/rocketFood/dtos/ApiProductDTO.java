@@ -7,7 +7,14 @@ import lombok.Setter;
 @Setter
 
 public class ApiProductDTO {
-    int id;
-    String name;
-    int cost;
+    private int id;
+    private String name;
+    private long cost;
+
+    public ApiProductDTO(int id, String name, long cost) {
+        this.id = id;
+        this.name = name;
+        this.cost = cost;
+    }
 }
+

@@ -65,4 +65,5 @@ public class Order {
     public String getStatus() {
         return order_status != null ? order_status.getName() : null;
     }
+    
 }

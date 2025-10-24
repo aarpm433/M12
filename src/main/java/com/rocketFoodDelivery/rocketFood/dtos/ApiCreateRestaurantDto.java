@@ -24,6 +24,8 @@ public class ApiCreateRestaurantDto {
 
     private String name;
 
+    
+
     @JsonProperty("price_range")
     @Min(1)
     @Max(3)

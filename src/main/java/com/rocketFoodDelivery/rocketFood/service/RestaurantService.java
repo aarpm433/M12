@@ -200,7 +200,7 @@ public class RestaurantService {
             var products = productRepository.findByRestaurantId(restaurantId);
             products.forEach(product -> productOrderRepository.deleteByProductId(product.getId()));
             // Delete associated orders
-            var orders = orderRepository.findByRestaurantId(restaurantId);
+            var orders = orderRepository.findByRestaurant_Id(restaurantId);
             orders.forEach(order -> orderRepository.delete(order));
             // Delete products
             products.forEach(productRepository::delete);

@@ -14,9 +14,9 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     Optional<Order> findById(int id);
-    List<Order> findByCustomerId(int id);
-    List<Order> findByRestaurantId(int id);
-    List<Order> findByCourierId(int id);
+    List<Order> findByCustomer_Id(int id);
+    List<Order> findByRestaurant_Id(int id);
+    List<Order> findByCourier_Id(int id);
 
     //Find all orders for a specific restaurant
     @Query(nativeQuery = true, value = "SELECT * FROM orders WHERE restaurant_id = :restaurantId")

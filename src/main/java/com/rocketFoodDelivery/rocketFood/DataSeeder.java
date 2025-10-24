@@ -53,7 +53,7 @@ public class DataSeeder {
        this.courierRepository = courierRepository;
    }
    Faker faker = new Faker();
-   @PostConstruct
+//    @PostConstruct
    public void seedData() {
 
        seedUsers();
