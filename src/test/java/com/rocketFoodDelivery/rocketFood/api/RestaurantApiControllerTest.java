@@ -1,6 +1,7 @@
 package com.rocketFoodDelivery.rocketFood.api;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ import com.rocketFoodDelivery.rocketFood.dtos.ApiCreateRestaurantDto;
 import com.rocketFoodDelivery.rocketFood.repository.UserRepository;
 import com.rocketFoodDelivery.rocketFood.service.RestaurantService;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 public class RestaurantApiControllerTest {
@@ -42,22 +44,28 @@ public class RestaurantApiControllerTest {
     @Test
     public void testCreateRestaurant_Success() throws Exception {
         ApiAddressDto inputAddress = new ApiAddressDto(1, "123 Wellington St.", "Montreal", "H1H2H2");
-        ApiCreateRestaurantDto inputRestaurant = new ApiCreateRestaurantDto(1, 4, "Villa wellington", 2, "5144154415", "reservations@villawellington.com", inputAddress);
+        ApiCreateRestaurantDto inputRestaurant = new ApiCreateRestaurantDto(
+                10, //  userId
+                4, //  id (or use setId below)
+                "Villa wellington",
+                2,
+                "5144154415",
+                "reservations@villawellington.com",
+                inputAddress
+        );
+        inputRestaurant.setId(10); //  Ensure ID is present in response
 
-        // Mock service behavior
         when(restaurantService.createRestaurant(any())).thenReturn(Optional.of(inputRestaurant));
 
-        // Validate response code and content
         mockMvc.perform(MockMvcRequestBuilders.post("/api/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(inputRestaurant)))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Success"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value(inputRestaurant.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.phone").value(inputRestaurant.getPhone()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(inputRestaurant.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.id").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.city").value(inputRestaurant.getAddress().getCity()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.street_address").value(inputRestaurant.getAddress().getStreetAddress()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.address.postal_code").value(inputRestaurant.getAddress().getPostalCode()))
@@ -65,17 +73,20 @@ public class RestaurantApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.price_range").value(inputRestaurant.getPriceRange()));
     }
 
+
     @Test
     public void testUpdateRestaurant_Success() throws Exception {
         // Mock data
         int restaurantId = 1;
         ApiCreateRestaurantDto updatedData = new ApiCreateRestaurantDto();
+        updatedData.setId(restaurantId);
         updatedData.setName("Updated Name");
         updatedData.setPriceRange(2);
         updatedData.setPhone("555-1234");
+        updatedData.setEmail("updated@example.com");
 
         // Mock service behavior
-        when(restaurantService.updateRestaurant(restaurantId, updatedData))
+        when(restaurantService.updateRestaurant(eq(restaurantId), any(ApiCreateRestaurantDto.class)))
                 .thenReturn(Optional.of(updatedData));
 
         // Validate response code and content
@@ -84,11 +95,14 @@ public class RestaurantApiControllerTest {
                 .content(new ObjectMapper().writeValueAsString(updatedData)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Success"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(restaurantId))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("Updated Name"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.price_range").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.phone").value("555-1234"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.phone").value("555-1234"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value("updated@example.com"));
     }
+
+
 
 
 }

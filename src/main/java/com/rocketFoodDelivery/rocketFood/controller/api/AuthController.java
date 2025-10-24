@@ -28,6 +28,8 @@ public class AuthController {
 
     @PostMapping("/api/auth")
     public ResponseEntity<?> authenticate(@RequestBody @Valid AuthRequestDTO request) {
+        System.out.println("AUTH REQUEST: " + request.getEmail() + " / " + request.getPassword());
+
         try {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

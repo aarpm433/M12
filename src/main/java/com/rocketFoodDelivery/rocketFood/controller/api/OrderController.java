@@ -22,18 +22,13 @@ public class OrderController {
     @Autowired private CourierRepository courierRepository;
     @Autowired private OrderStatusRepository orderStatusRepository;
 
-    // ❌ These methods below don’t belong here (they refer to undefined product_quantity)
-    // public Integer getQuantity() { return product_quantity; }
-    // public void setQuantity(Integer quantity) { this.product_quantity = quantity; }
-
-    // ✅ GET /api/orders?type=customer&id=7
     @GetMapping
     public ResponseEntity<?> getOrders(
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Integer id) {
 
         if (type == null || id == null) {
-            return ResponseBuilder.buildBadRequest("Invalid or missing parameters", null);
+            return ResponseBuilder.buildBadRequest("Invalid or missing parameters");
         }
 
         List<Order> orders;
@@ -42,7 +37,7 @@ public class OrderController {
             case "restaurant" -> orders = orderRepository.findByRestaurant_Id(id);
             case "courier" -> orders = orderRepository.findByCourier_Id(id);
             default -> {
-                return ResponseBuilder.buildBadRequest("Invalid type parameter", null);
+                return ResponseBuilder.buildBadRequest("Invalid type parameter");
             }
         }
 
@@ -61,7 +56,7 @@ public class OrderController {
             // statusId is not in the example request, so remove it from validation
             if (dto.getCustomerId() == null || dto.getRestaurantId() == null ||
                 dto.getProducts() == null || dto.getProducts().isEmpty()) {
-                return ResponseBuilder.buildBadRequest("Invalid or missing parameters", null);
+                return ResponseBuilder.buildBadRequest("Invalid or missing parameters");
             }
 
             // Create order with default "in progress" status if none provided
@@ -94,7 +89,7 @@ public class OrderController {
             return ResponseBuilder.buildCreatedResponse("Order created successfully", buildOrderResponse(savedOrder));
 
         } catch (Exception e) {
-            return ResponseBuilder.buildBadRequest("Error creating order", e.getMessage());
+            return ResponseBuilder.buildBadRequest("Error creating order" + e.getMessage());
         }
     }
 
