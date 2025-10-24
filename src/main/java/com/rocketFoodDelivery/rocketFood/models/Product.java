@@ -25,6 +25,9 @@ public class Product {
     @JoinColumn(name = "restaurant_id",nullable = false)
     private Restaurant restaurant;
 
+    private int price; // add getter/setter
+
+
     @Column(nullable = false)
     private String name;
 

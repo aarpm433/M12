@@ -12,4 +12,6 @@ public class ApiProductForOrderApiDTO {
     int quantity;
     int unit_cost;
     int total_cost;
+    
+    
 }

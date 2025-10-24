@@ -76,17 +76,18 @@ public class OrderController {
             Order savedOrder = orderRepository.save(order);
 
             // Save product orders
-            for (ApiCreateOrderDto.ProductOrderDto pDto : dto.getProducts()) {
-                Product product = productRepository.findById(pDto.getId())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
-                ProductOrder productOrder = new ProductOrder();
-                productOrder.setOrder(savedOrder);
-                productOrder.setProduct(product);
-                productOrder.setQuantity(pDto.getQuantity());
-                productOrderRepository.save(productOrder);
-            }
+        for (ApiCreateOrderDto.ProductOrderDto pDto : dto.getProducts()) {
+            Product product = productRepository.findById(pDto.getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+            ProductOrder productOrder = new ProductOrder();
+            productOrder.setOrder(savedOrder);
+            productOrder.setProduct(product);
+            productOrder.setQuantity(pDto.getQuantity());
+            productOrderRepository.save(productOrder);
+        }
 
-            return ResponseBuilder.buildCreatedResponse("Order created successfully", buildOrderResponse(savedOrder));
+        // After this, return the response
+        return ResponseBuilder.buildCreatedResponse("Order created successfully", buildOrderResponse(savedOrder));
 
         } catch (Exception e) {
             return ResponseBuilder.buildBadRequest("Error creating order" + e.getMessage());
@@ -114,13 +115,13 @@ public class OrderController {
         for (ProductOrder po : productOrders) {
             Product p = po.getProduct();
             if (p == null) continue;
-            long cost = p.getPrice() * po.getQuantity();
+            long cost = p.getCost() * po.getQuantity();
 
             Map<String, Object> prodMap = new LinkedHashMap<>();
             prodMap.put("product_id", p.getId());
             prodMap.put("product_name", p.getName());
             prodMap.put("quantity", po.getQuantity());
-            prodMap.put("unit_cost", p.getPrice());
+            prodMap.put("unit_cost", p.getCost());
             prodMap.put("total_cost", cost);
 
             totalCost += cost;
